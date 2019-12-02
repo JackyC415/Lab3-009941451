@@ -51,9 +51,6 @@ exports.saveItem = (req, res) => {
 
 exports.updateItem = (req, res) => {
     console.log("INSIDE EDIT ITEM")
-    if (!req.session.isLoggedIn) {
-        return res.status(400).json("Please login!");
-    } else {
         const updateItem = {
             item_name: req.body.item_name,
             item_desc: req.body.item_desc,
@@ -65,14 +62,10 @@ exports.updateItem = (req, res) => {
             if (err) throw err;
             res.status(200).json(true);
         });
-    }
 };
 
 exports.getItemToEdit = (req, res) => {
     console.log("INSIDE EDIT ITEM")
-    if (!req.session.isLoggedIn) {
-        return res.status(400).json("Please login!");
-    } else {
         Menus.findById({ _id: req.params.id }, (err, item) => {
             if (err) {
                 throw err;
@@ -81,7 +74,6 @@ exports.getItemToEdit = (req, res) => {
                 res.status(200).send(item);
             }
         });
-    }
 };
 
 exports.getBreakfastMenu = (req, res) => {

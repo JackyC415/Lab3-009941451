@@ -1,5 +1,6 @@
 const Joi = require('@hapi/joi');
 const bcrypt = require('bcrypt');
+const saltRounds = 10;
 const Users = require("../models/User");
 const jwt = require("jsonwebtoken");
 
@@ -15,7 +16,6 @@ exports.register = (req, res) => {
         zipcode: Joi.string().max(5)
     });
 
-    if (!req.session.isLoggedIn) {
         const { error, value } = schema.validate({ name: req.body.name, email: req.body.email, password: req.body.password, restaurantname: req.body.restaurantname, zipcode: req.body.zipcode });
         if (error) {
             throw error;
@@ -47,9 +47,6 @@ exports.register = (req, res) => {
                 }
             });
         }
-    } else {
-        return res.status(400).json("Please logout first to register!");
-    }
 };
 
 exports.login = (req, res) => {
@@ -89,9 +86,6 @@ exports.login = (req, res) => {
 
 exports.getProfile = (req, res) => {
     console.log('Retrieving Profile...');
-    if (!req.session.isLoggedIn) {
-        res.sendStatus(404);
-    } else {
         Users.findById({ _id: req.session.ID }, (err, user) => {
             if (err) {
                 throw err;
@@ -102,19 +96,14 @@ exports.getProfile = (req, res) => {
                 return res.status(404).send("Profile does not exist!");
             }
         });
-    }
 };
 
 exports.updateProfile = (req, res) => {
     console.log('Updating Profile...');
-    if (!req.session.isLoggedIn) {
-        console.log("Please log in to update profile.");
-    } else {
         Users.findByIdAndUpdate(req.session.ID, req.body, (err, user) => {
             if (err) throw err;
             res.status(200).send("Updated profile successfully!");
         });
-    }
 };
 
 exports.logOut = (req, res) => {

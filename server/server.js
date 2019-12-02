@@ -32,15 +32,22 @@ app.use(session({
 }));
 
 //connect to mongoDB through mongoose schema model
-mongoose.connect('mongodb://localhost:27017/lab2', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+mongoose.connect('mongodb://localhost:27017/lab3', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(() => console.log("MongoDB connected!"))
   .catch(err => console.log(err));
 mongoose.set('useFindAndModify', false);
 
 //initialize routes path
 const { login, register, getProfile, updateProfile, logOut } = require('./routes/user');
-const { getRestaurants, orderItem, viewCart, viewSearchItems, viewPastOrders, filterByCuisine, messageOwner, viewReply } = require('./routes/buyer');
-const { getItemToEdit, getOwnerMenu, updateItem, removeItem, saveItem, viewOrders, cancelOrder, deliverOrder, getBreakfastMenu, getLunchMenu, getAppetizerMenu, viewMessages, replyBuyer } = require('./routes/owner');
+
+const { getRestaurants, orderItem, viewCart, 
+        viewSearchItems, viewPastOrders, filterByCuisine, 
+        messageOwner, viewReply } = require('./routes/buyer');
+
+const { getItemToEdit, getOwnerMenu, updateItem, removeItem, 
+        saveItem, viewOrders, cancelOrder, deliverOrder, getBreakfastMenu, 
+        getLunchMenu, getAppetizerMenu, viewMessages, replyBuyer 
+      } = require('./routes/owner');
 
 //GET api
 app.get('/getProfile', getProfile);
