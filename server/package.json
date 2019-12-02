@@ -1,0 +1,47 @@
+{
+  "name": "cmpe273-lab1",
+  "version": "1.0.0",
+  "description": "CMPE273: Enteprise Distributed Systems Lab 2 Assignment (Using REST Node.js &amp; React JS)",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run dev",
+    "test": "mocha test",
+    "server": "node server.js",
+    "client": "cd ../client && npm start",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JackyC415/cmpe273-lab1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JackyC415/cmpe273-lab1/issues"
+  },
+  "homepage": "https://github.com/JackyC415/cmpe273-lab1#readme",
+  "dependencies": {
+    "@hapi/joi": "^16.1.4",
+    "@types/hapi__joi": "^15.0.4",
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "concurrently": "^4.1.2",
+    "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-session": "^1.16.2",
+    "is-empty": "^1.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "kafka-node": "^3.0.1",
+    "mocha": "^6.2.1",
+    "mongoose": "^5.7.7",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "path": "^0.12.7",
+    "react-cookies": "^0.1.1",
+    "validator": "^11.1.0"
+  }
+}
