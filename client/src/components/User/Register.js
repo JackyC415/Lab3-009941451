@@ -1,29 +1,21 @@
-/*References: https://react-bootstrap.github.io/components/forms/
-https://blog.bitsrc.io/build-a-login-auth-app-with-mern-stack-part-2-frontend-6eac4e38ee82*/
-
 import React, { Component } from 'react';
-import axios from 'axios';
-import { Link, withRouter } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { register } from "../../actions/actions";
+import { graphql } from 'react-apollo';
+import { registerMutation } from '../../mutation/mutations';
 import '../../App.css';
 
 class Register extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
-            name: '',
+            firstName: '',
+            lastName: '',
             email: '',
             password: '',
-            restaurantname: '',
-            zipcode: '',
+            restaurantName: '',
             cuisine: '',
-            owner: false,
-            errors: {}
+            owner: false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -31,53 +23,37 @@ class Register extends Component {
         this.switchForm = this.switchForm.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.errors) {
-          this.setState({
-            errors: nextProps.errors
-          });
-        }
-      }
-
     handleChange = (e) => {
         e.preventDefault();
         this.setState({ [e.target.name]: e.target.value });
     }
 
-    //send registration data to server for processing
-    sendRestAPI = (data) => {
-        axios.post('/register', data)
-            .then(res => {
-                console.log(res.data);
-            });
-    }
-
     handleSubmit = (e) => {
         e.preventDefault();
 
-        const buyerData = {
-            name: this.state.name,
-            email: this.state.email,
-            password: this.state.password
-        }
-
-        const ownerData = {
-            name: this.state.name,
-            email: this.state.email,
-            password: this.state.password,
-            restaurantname: this.state.restaurantname,
-            zipcode: this.state.zipcode,
-            owner: this.state.owner
-        }
-
         if (!this.state.owner) {
-            this.props.register(buyerData, this.props.history);
-            this.sendRestAPI(buyerData);
+            console.log('Not owner');
+            this.props.registerMutation({
+                variables: {
+                    firstName: this.state.firstName,
+                    lastName: this.state.lastName,
+                    email: this.state.email,
+                    password: this.state.password
+                }
+            });
         } else {
-            this.props.register(ownerData, this.props.history);
-            this.sendRestAPI(ownerData);
+            console.log('Owner');
+            this.props.registerMutation({
+                variables: {
+                    firstName: this.state.firstName,
+                    lastName: this.state.lastName,
+                    email: this.state.email,
+                    password: this.state.password,
+                    restaurantName: this.state.restaurantName,
+                    owner: this.state.owner
+                }
+            });
         }
-
     }
 
     switchForm = (e) => {
@@ -87,32 +63,31 @@ class Register extends Component {
     render() {
         let ownerForm = null;
         let accountType = "Owner";
-        const { errors } = this.state;
 
         if (this.state.owner) {
             ownerForm =
                 <div>
                     <Form.Group controlId="formRestaurantname">
                         <Form.Label>Restaurant Name:</Form.Label>
-                        <Form.Control 
-                            type="text" 
-                            name="restaurantname" 
-                            maxLength="30" 
-                            placeholder="Restaurant name" 
-                            value={this.state.restaurantname} 
-                            onChange={this.handleChange} 
+                        <Form.Control
+                            type="text"
+                            name="restaurantName"
+                            maxLength="30"
+                            placeholder="Restaurant name"
+                            value={this.state.restaurantName}
+                            onChange={this.handleChange}
                             required />
                     </Form.Group>
-                    <Form.Group controlId="formZipcode">
-                        <Form.Label>Zipcode:</Form.Label>
-                        <Form.Control 
-                            type="text" 
-                            name="zipcode" 
-                            maxLength="5" 
-                            placeholder="5 digits" 
-                            value={this.state.zipcode} 
-                            onChange={this.handleChange} 
-                            required/>
+                    <Form.Group controlId="formCuisine">
+                        <Form.Label>Cuisine:</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="cuisine"
+                            maxLength="30"
+                            placeholder="Cuisine type"
+                            value={this.state.cuisine}
+                            onChange={this.handleChange}
+                            required />
                     </Form.Group>
                 </div>
             accountType = "User";
@@ -122,39 +97,49 @@ class Register extends Component {
             <div>
                 <Form onSubmit={this.handleSubmit} className="login-form">
                     <h2>Create account</h2>
-                    <Form.Group controlId="formUsername">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control 
-                            type="text" 
-                            name="name" 
-                            placeholder="Your name" 
-                            minLength="3" 
-                            maxLength="30" 
-                            value={this.state.name} 
-                            onChange={this.handleChange} 
+                    <Form.Group controlId="formFirstname">
+                        <Form.Label>First name</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="firstName"
+                            placeholder="Your first name"
+                            minLength="3"
+                            maxLength="30"
+                            value={this.state.firstName}
+                            onChange={this.handleChange}
+                            required />
+                    </Form.Group>
+                    <Form.Group controlId="formLastname">
+                        <Form.Label>Last name</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="lastName"
+                            placeholder="Your last name"
+                            minLength="3"
+                            maxLength="30"
+                            value={this.state.lastName}
+                            onChange={this.handleChange}
                             required />
                     </Form.Group>
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label>Email address</Form.Label>
-                        <Form.Control 
-                            type="email" 
-                            placeholder="Enter email" 
-                            name="email" 
-                            value={this.state.email} 
-                            error={errors.email} 
+                        <Form.Control
+                            type="email"
+                            placeholder="Example@gmail.com"
+                            name="email"
+                            value={this.state.email}
                             onChange={this.handleChange}
                             required />
                     </Form.Group>
                     <Form.Group controlId="formBasicPassword">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control 
-                            type="password" 
-                            name="password" 
-                            placeholder="At least 6 characters" 
-                            minLength="6" 
-                            maxLength="16" 
-                            value={this.state.password} 
-                            error={errors.password} 
+                        <Form.Control
+                            type="password"
+                            name="password"
+                            placeholder="At least 6 characters"
+                            minLength="6"
+                            maxLength="16"
+                            value={this.state.password}
                             onChange={this.handleChange}
                             required />
                     </Form.Group>
@@ -163,7 +148,6 @@ class Register extends Component {
                         Register
                     </Button> &nbsp;
                     <Button onClick={this.switchForm}>Sign Up as {accountType}</Button>
-                    <div>Already have an account? <Link to="/login">Login</Link></div><br />
                     <div> {this.state.output} </div>
                 </Form>
             </div>
@@ -171,13 +155,4 @@ class Register extends Component {
     }
 }
 
-Register.propTypes = {
-    register: PropTypes.func.isRequired,
-    errors: PropTypes.object.isRequired
-  };
-  
-  const mapStateToProps = state => ({
-    errors: state.errors
-  });
-  
-export default connect(mapStateToProps, { register })(withRouter(Register));
+export default graphql(registerMutation, { name: "registerMutation" })(Register);

@@ -1,12 +1,11 @@
-//References: https://react-bootstrap.github.io/components/forms/
-
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
-import axios from 'axios';
 import cookie from 'react-cookies';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import { graphql } from 'react-apollo';
+import { loginMutation } from '../../mutation/mutations';
 import '../../App.css'
 
 class Login extends Component {
@@ -15,8 +14,7 @@ class Login extends Component {
 
         this.state = {
             email: '',
-            password: '',
-            authFlag: false
+            password: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -29,26 +27,12 @@ class Login extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        let credential = {
-            email: this.state.email,
-            password: this.state.password
-        }
-        //this.props.loginUser(credential);
-        this.sendRestAPI(credential);
-    }
-
-    sendRestAPI = (data) => {
-        axios.defaults.withCredentials = true;
-        axios.post('/login', data)
-            .then(res => {
-                console.log("Status Code : ", res.status);
-                if (res.status === 200) {
-                    this.setState({ authFlag: true })
-                } else {
-                    this.setState({ authFlag: false })
-                }
-                console.log(res.token);
-            });
+        this.props.loginMutation({
+            variables: {
+                email: this.state.email,
+                password: this.state.password
+            }
+        });
     }
 
     render() {
@@ -80,4 +64,4 @@ class Login extends Component {
     }
 }
 
-export default Login;
+export default graphql(loginMutation, { name: "loginMutation" })(Login);

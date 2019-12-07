@@ -3,16 +3,10 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import cookie from 'react-cookies';
-import axios from 'axios';
 
 import {
-    Collapse,
-    Navbar,
-    NavbarToggler,
-    Nav,
-    NavItem,
-    NavLink,
-    Spinner
+    Collapse, Navbar, NavbarToggler,
+    Nav, NavItem, NavLink, Spinner
 } from 'reactstrap';
 
 class NavbarPage extends Component {
@@ -25,18 +19,14 @@ class NavbarPage extends Component {
         };
     }
 
-    handleLogout = () => {
-        axios.post('/logOut')
-            .then(res => {
-                if (res) console.log("Logged Out!");
-            });
-        cookie.remove('cookie', { path: '/' });
-    }
+    handleLogout = () => {}
+
     toggle() {
         this.setState({
             isOpen: !this.state.isOpen
         });
     }
+
     render() {
         let main = null;
         if (cookie.load('cookie') === 'owner') {
@@ -44,9 +34,9 @@ class NavbarPage extends Component {
                 <div>
                     <Navbar color="light" light expand="md">
                         <Nav className="ml-auto" navbar>
-                                <NavItem>
-                                    <NavLink tag={Link} to="/ownerhome">Homepage</NavLink>
-                                </NavItem>
+                            <NavItem>
+                                <NavLink tag={Link} to="/ownerhome">Homepage</NavLink>
+                            </NavItem>
                         </Nav>
                         <NavbarToggler onClick={this.toggle} />
                         <Collapse isOpen={this.state.isOpen} navbar>
@@ -56,12 +46,6 @@ class NavbarPage extends Component {
                                 </NavItem>
                                 <NavItem>
                                     <NavLink tag={Link} to="/ownerhome/menu">Menu</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink tag={Link} to="/ownerhome/vieworder">View Order</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink tag={Link} to="/inbox">Inbox</NavLink>
                                 </NavItem>
                                 <NavItem>
                                     <NavLink tag={Link} to="/" onClick={this.handleLogout}>Logout</NavLink>
@@ -84,22 +68,13 @@ class NavbarPage extends Component {
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className="ml-auto" navbar>
                                 <NavItem>
-                                <NavLink tag={Link} to="/search/pagination">Search</NavLink>
+                                    <NavLink tag={Link} to="/search/pagination">Search</NavLink>
                                 </NavItem>
                                 <NavItem>
                                     <NavLink tag={Link} to="/profile">Profile</NavLink>
                                 </NavItem>
                                 <NavItem>
                                     <NavLink tag={Link} to="/addToCart">Order</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink tag={Link} to="/viewCart">View Cart</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink tag={Link} to="/viewPastOrder">Past Orders</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink tag={Link} to="/dialog">Inbox</NavLink>
                                 </NavItem>
                                 <NavItem>
                                     <NavLink tag={Link} to="/" onClick={this.handleLogout}>Logout</NavLink>
@@ -115,7 +90,7 @@ class NavbarPage extends Component {
                     <Navbar color="light" light expand="md">
                         <Nav className="ml-auto" navbar>
                             <NavItem>
-                                <NavLink tag={Link} to="/">Lab2 </NavLink>
+                                <NavLink tag={Link} to="/">Lab3 </NavLink>
                             </NavItem>
                         </Nav>
                         <div>

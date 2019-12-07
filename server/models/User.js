@@ -2,14 +2,13 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-  name: {
+  firstName: {
     type: String,
     required: true
   },
-  image: {
-    type: Buffer,
-    required: true,
-    default: 0
+  lastName: {
+    type: String,
+    required: true
   },
   email: {
     type: String,
@@ -21,7 +20,7 @@ const UserSchema = new Schema({
     required: true,
     minlength: 6
   },
-  restaurantname: {
+  restaurantName: {
     type: String,
     required: true,
     default: "N/A"
@@ -30,16 +29,6 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     default: "N/A"
-  },
-  phone: {
-    type: String,
-    required: true,
-    default: "N/A"
-  },
-  zipcode: {
-    type: String,
-    required: true,
-    default: "00000"
   },
   owner: {
     type: Boolean,
