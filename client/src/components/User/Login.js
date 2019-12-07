@@ -32,14 +32,12 @@ class Login extends Component {
                 email: this.state.email,
                 password: this.state.password
             }
-        });
+        })
     }
 
     render() {
         let redirectHome = null;
-        if (cookie.load('cookie')) {
-            redirectHome = <Redirect to="/" />
-        }
+        if (cookie.load('cookie')) redirectHome = <Redirect to="/" />
         return (
             <div>{redirectHome}
                 <Form onSubmit={this.handleSubmit} className="login-form">

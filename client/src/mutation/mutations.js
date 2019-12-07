@@ -1,4 +1,3 @@
-
 import { gql } from 'apollo-boost';
 
 const registerMutation = gql`
@@ -19,4 +18,12 @@ const loginMutation = gql`
     }
 `;
 
-export {registerMutation, loginMutation};
+const logoutMutation = gql`
+    mutation NavbarPage($email: String){
+        logoutUser(email: $email){
+        email
+    }
+}
+`;
+
+export { registerMutation, loginMutation, logoutMutation };

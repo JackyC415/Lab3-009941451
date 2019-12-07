@@ -67,36 +67,45 @@ const Mutation = new GraphQLObjectType({
                     if (err) throw err;
                     userModel.password = hash;
                     userModel.save()
-                        .then(() => console.log('Registered!'))
+                        .then(() => console.log('graphql: register success'))
                         .catch(err => console.log(err))
                 });
                 return userModel;
             }
         },
-
         loginUser: {
             type: UserType,
             args: {
                 email: { type: GraphQLString },
                 password: { type: GraphQLString }
             },
-            resolve: function (parent, args, { req, res }) {
-                User.findOne({ email: args.email }, (err, user) => {
-                    if (user) {
-                        bcrypt.compare(args.password, user.password).then(isMatch => {
-                            if (isMatch) {
-                                let cookieName = "buyer";
-                                if (user.owner) {
-                                    cookieName = "owner";
-                                }
-                                res.cookie('cookie', cookieName, { maxAge: 900000, httpOnly: false, path: '/' });
-                                return res.status(200).send("login successful");
-                            } else {
-                                console.log('Incorrect password');
-                            }
-                        });
+            resolve: async function (parent, args, { req, res }) {
+                const user = await User.findOne({ email: args.email })
+                if (user) {
+                    const isMatch = await bcrypt.compare(args.password, user.password)
+                    if (isMatch) {
+                        const cookieValue = user.owner ? 'owner' : 'buyer';
+                        res.cookie('cookie', cookieValue, { maxAge: 900000, httpOnly: false, path: '/' });
+                        req.session.ID = user.id;
+                        req.session.isLoggedIn = true;
+                        //return user;
                     }
-                });
+                    throw new Error('Invalid credentials')
+                }
+                console.log('graphql: login success');
+                res.send('login success');
+            }
+        },
+        logoutUser: {
+            type: UserType,
+            args: {
+                email: { type: GraphQLString }
+            },
+            resolve: function (parent, args, { req }) {
+                req.session.isLoggedIn = false;
+                req.session.ID = null;
+                console.log("graphql: logout success");
+                return;
             }
         }
     }

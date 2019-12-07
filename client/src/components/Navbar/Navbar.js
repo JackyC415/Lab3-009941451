@@ -1,8 +1,9 @@
-//References: http://reactstrap.github.io/components/navbar/
 import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import cookie from 'react-cookies';
+import { graphql } from 'react-apollo';
+import { logoutMutation } from '../../mutation/mutations';
 
 import {
     Collapse, Navbar, NavbarToggler,
@@ -15,11 +16,19 @@ class NavbarPage extends Component {
         this.handleLogout = this.handleLogout.bind(this);
         this.toggle = this.toggle.bind(this);
         this.state = {
-            isOpen: false
+            isOpen: false,
+            email: ''
         };
     }
 
-    handleLogout = () => {}
+    handleLogout = () => {
+        cookie.remove('cookie', { path: '/' });
+        this.props.logoutMutation({
+            variables: {
+                email: this.state.email
+            }
+        });
+    }
 
     toggle() {
         this.setState({
@@ -141,4 +150,4 @@ class NavbarPage extends Component {
     }
 }
 
-export default NavbarPage;
+export default graphql(logoutMutation, { name: "logoutMutation" })(NavbarPage);

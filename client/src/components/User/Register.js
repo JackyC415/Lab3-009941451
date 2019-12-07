@@ -32,7 +32,6 @@ class Register extends Component {
         e.preventDefault();
 
         if (!this.state.owner) {
-            console.log('Not owner');
             this.props.registerMutation({
                 variables: {
                     firstName: this.state.firstName,
@@ -42,7 +41,6 @@ class Register extends Component {
                 }
             });
         } else {
-            console.log('Owner');
             this.props.registerMutation({
                 variables: {
                     firstName: this.state.firstName,
