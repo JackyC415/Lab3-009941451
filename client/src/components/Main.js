@@ -7,12 +7,7 @@ import Register from './User/Register';
 import Profile from './User/Profile';
 
 import OwnerHome from './Owner/Homepage';
-import OwnerMenu from './Owner/Menu';
-import UpdateMenuItem from './Owner/UpdateMenuItem';
-import AddMenuItem from './Owner/AddMenuItem';
-
-import ViewCart from './Buyer/ViewCart';
-import AddToCart from './Buyer/AddToCart';
+import BuyerHome from './Buyer/Homepage';
 
 //Create a Main Component
 class Main extends Component {
@@ -24,12 +19,9 @@ class Main extends Component {
                 <Route path="/register" component={Register} />
                 <Route path="/login" component={Login} />
                 <Route path="/profile" component={Profile} />
-                <Route path="/viewCart" component={ViewCart} />
-                <Route path="/addToCart" component={AddToCart} />
-                <Route path="/getItemToEdit/:id" component={UpdateMenuItem} />
-                <Route path="/addMenuItem" component={AddMenuItem} />
                 <Route path="/ownerhome" component={OwnerHome} />
-                <Route path="/ownerhome/menu" component={OwnerMenu} />
+                <Route path="/buyerhome" component={BuyerHome} />
+
             </div>
         )
     }

@@ -54,9 +54,6 @@ class NavbarPage extends Component {
                                     <NavLink tag={Link} to="/profile">Profile</NavLink>
                                 </NavItem>
                                 <NavItem>
-                                    <NavLink tag={Link} to="/ownerhome/menu">Menu</NavLink>
-                                </NavItem>
-                                <NavItem>
                                     <NavLink tag={Link} to="/" onClick={this.handleLogout}>Logout</NavLink>
                                 </NavItem>
                             </Nav>
@@ -77,13 +74,7 @@ class NavbarPage extends Component {
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className="ml-auto" navbar>
                                 <NavItem>
-                                    <NavLink tag={Link} to="/search/pagination">Search</NavLink>
-                                </NavItem>
-                                <NavItem>
                                     <NavLink tag={Link} to="/profile">Profile</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink tag={Link} to="/addToCart">Order</NavLink>
                                 </NavItem>
                                 <NavItem>
                                     <NavLink tag={Link} to="/" onClick={this.handleLogout}>Logout</NavLink>
@@ -139,7 +130,7 @@ class NavbarPage extends Component {
         if (cookie.load('cookie') === 'owner') {
             redirectVar = <Redirect to="/ownerhome" />
         } else if (cookie.load('cookie') === 'buyer') {
-            redirectVar = <Redirect to="/search/pagination" />
+            redirectVar = <Redirect to="/buyerhome" />
         }
         return (
             <div>
