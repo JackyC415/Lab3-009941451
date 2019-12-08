@@ -34,7 +34,7 @@ app.use(session({
 }));
 
 //connect to mongoDB through mongoose schema model
-mongoose.connect('mongodb://localhost:27017/lab3', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+mongoose.connect('mongodb://localhost:27017/lab3-009941451', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(() => console.log("MongoDB connected!"))
   .catch(err => console.log(err));
 mongoose.set('useFindAndModify', false);
