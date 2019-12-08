@@ -1,39 +1,22 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import cookie from 'react-cookies';
+import { graphql, compose } from 'react-apollo';
+import { updateProfileMutation } from '../../mutation/mutations';
+import { getProfileQuery } from "../../queries/queries";
 
 class Profile extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             firstName: '',
             lastName: '',
             email: '',
             restaurantName: '',
             cuisine: '',
-            output: '',
-            loading: false
+            output: ''
         }
         this.handleChange = this.handleChange.bind(this);
-    }
-
-    componentDidMount() {
-        /*
-        axios.get('/getProfile')
-            .then(res => {
-                if (res.status === 200) {
-                    this.setState({ firstName: res.data.firstName });
-                    this.setState({ lastName: res.data.lastName });
-                    this.setState({ email: res.data.email });
-                    this.setState({ restaurantName: res.data.restaurantName });
-                    this.setState({ cuisine: res.data.cuisine });
-                    this.setState({ loading: true });
-                }
-            }).catch((err) => {
-                console.log(err);
-            })
-        */
     }
 
     handleChange = (e) => {
@@ -69,10 +52,18 @@ class Profile extends Component {
     }
 
     render() {
+        let data = this.props.getProfileQuery;
+        if (!data.loading) {
+            this.state.firstName = data.getUserProfile.firstName;
+            this.state.lastName = data.getUserProfile.lastName;
+            this.state.email = data.getUserProfile.email;
+            this.state.restaurantName = data.getUserProfile.restaurantName;
+            this.state.cuisine = data.getUserProfile.cuisine;
+        }
         let renderPage = 'No Profile Found!';
         if (!cookie.load('cookie')) {
             renderPage = <Redirect to="/login" />
-        } else if (this.state.loading && cookie.load('cookie') === 'owner') {
+        } else if (cookie.load('cookie') === 'owner') {
             renderPage =
                 <div>
                     First name: <input type="text" name="firstName" defaultValue={this.state.firstName} onChange={this.handleChange} required></input><br />
@@ -98,4 +89,7 @@ class Profile extends Component {
     }
 }
 
-export default Profile;
+export default compose(
+    graphql(getProfileQuery, { name: "getProfileQuery" }),
+    graphql(updateProfileMutation, { name: "updateProfileMutation" })
+)(Profile);

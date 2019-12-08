@@ -48,6 +48,7 @@ class Register extends Component {
                     email: this.state.email,
                     password: this.state.password,
                     restaurantName: this.state.restaurantName,
+                    cuisine: this.state.cuisine,
                     owner: this.state.owner
                 }
             });

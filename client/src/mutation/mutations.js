@@ -4,6 +4,11 @@ const registerMutation = gql`
     mutation Register($firstName: String, $lastName: String, $email: String, $password: String, $restaurantName: String, $cuisine: String, $owner: Boolean){
         registerUser(firstName: $firstName, lastName: $lastName, email: $email, password: $password, restaurantName: $restaurantName, cuisine: $cuisine, owner: $owner){
             firstName
+            lastName
+            email
+            password
+            restaurantName
+            cuisine
             id
         }
     }
@@ -26,4 +31,16 @@ const logoutMutation = gql`
 }
 `;
 
-export { registerMutation, loginMutation, logoutMutation };
+const updateProfileMutation = gql`
+    mutation Profile($firstName: String, $lastName: String, $email: String, $restaurantName: String, $cuisine: String){
+        updateProfile(firstName: $firstName, lastName: $lastName, email: $email, restaurantName: $restaurantName, cuisine: $cuisine){
+        firstName
+        lastName
+        email
+        restaurantName
+        cuisine
+    }
+}
+`;
+
+export { registerMutation, loginMutation, logoutMutation, updateProfileMutation };
