@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import cookie from 'react-cookies';
 import { graphql, compose } from 'react-apollo';
-import { updateProfileMutation } from '../../mutation/mutations';
-import { getProfileQuery } from "../../queries/queries";
+import { updateUserProfileMutation, getUserProfileMutation } from '../../mutation/mutations';
 
 class Profile extends Component {
     constructor(props) {
@@ -19,13 +18,29 @@ class Profile extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    componentDidMount() {
+        this.props.getUserProfileMutation({
+            variables: {
+                email: this.state.output
+            }
+        }).then(res => {
+            this.setState({
+                firstName: res.data.getUserProfile.firstName,
+                lastName: res.data.getUserProfile.lastName,
+                email: res.data.getUserProfile.email,
+                restaurantName: res.data.getUserProfile.restaurantName,
+                cuisine: res.data.getUserProfile.cuisine
+            })
+        })
+    }
+
     handleChange = (e) => {
         this.setState({ [e.target.name]: e.target.value });
     }
 
     updateOwner = (e) => {
         e.preventDefault();
-        this.props.updateProfileMutation({
+        this.props.updateUserProfileMutation({
             variables: {
                 firstName: this.state.firstName,
                 lastName: this.state.lastName,
@@ -34,38 +49,31 @@ class Profile extends Component {
                 cuisine: this.state.cuisine
             }
         }).then(res => {
-            this.setState({ output: res.data })
+            this.setState({ output: 'Updated Profile Successfully!' })
         });
     }
 
     updateBuyer = (e) => {
         e.preventDefault();
-        this.props.updateProfileMutation({
+        this.props.updateUserProfileMutation({
             variables: {
                 firstName: this.state.firstName,
                 lastName: this.state.lastName,
                 email: this.state.email
             }
         }).then(res => {
-            this.setState({ output: res.data })
+            this.setState({ output: 'Updated Profile Successfully!' })
         });
     }
 
     render() {
-        let data = this.props.getProfileQuery;
-        if (!data.loading) {
-            this.state.firstName = data.getUserProfile.firstName;
-            this.state.lastName = data.getUserProfile.lastName;
-            this.state.email = data.getUserProfile.email;
-            this.state.restaurantName = data.getUserProfile.restaurantName;
-            this.state.cuisine = data.getUserProfile.cuisine;
-        }
         let renderPage = 'No Profile Found!';
         if (!cookie.load('cookie')) {
             renderPage = <Redirect to="/login" />
         } else if (cookie.load('cookie') === 'owner') {
             renderPage =
                 <div>
+                    <h1>Owner's Profile</h1>
                     First name: <input type="text" name="firstName" defaultValue={this.state.firstName} onChange={this.handleChange} required></input><br />
                     Last name: <input type="text" name="lastName" defaultValue={this.state.lastName} onChange={this.handleChange} required></input><br />
                     Email: <input type="email" name="email" defaultValue={this.state.email} onChange={this.handleChange} required ></input><br />
@@ -76,6 +84,7 @@ class Profile extends Component {
         } else if (cookie.load('cookie') === 'buyer') {
             renderPage =
                 <div>
+                    <h1>Buyer's Profile</h1>
                     First name: <input type="text" name="firstName" defaultValue={this.state.firstName} onChange={this.handleChange} required></input><br />
                     Last name: <input type="text" name="lastName" defaultValue={this.state.lastName} onChange={this.handleChange} required></input><br />
                     Email: <input type="email" name="email" defaultValue={this.state.email} onChange={this.handleChange} required ></input><br />
@@ -90,6 +99,6 @@ class Profile extends Component {
 }
 
 export default compose(
-    graphql(getProfileQuery, { name: "getProfileQuery" }),
-    graphql(updateProfileMutation, { name: "updateProfileMutation" })
+    graphql(getUserProfileMutation, { name: "getUserProfileMutation" }),
+    graphql(updateUserProfileMutation, { name: "updateUserProfileMutation" })
 )(Profile);

@@ -31,9 +31,21 @@ const logoutMutation = gql`
 }
 `;
 
-const updateProfileMutation = gql`
+const getUserProfileMutation = gql`
+    mutation Profile($email: String){
+        getUserProfile(email: $email){
+            email
+            firstName
+            lastName
+            restaurantName
+            cuisine
+    }
+}
+`;
+
+const updateUserProfileMutation = gql`
     mutation Profile($firstName: String, $lastName: String, $email: String, $restaurantName: String, $cuisine: String){
-        updateProfile(firstName: $firstName, lastName: $lastName, email: $email, restaurantName: $restaurantName, cuisine: $cuisine){
+        updateUserProfile(firstName: $firstName, lastName: $lastName, email: $email, restaurantName: $restaurantName, cuisine: $cuisine){
         firstName
         lastName
         email
@@ -43,4 +55,16 @@ const updateProfileMutation = gql`
 }
 `;
 
-export { registerMutation, loginMutation, logoutMutation, updateProfileMutation };
+const addItemMutation = gql`
+    mutation AddItem($name: String, $section: String){
+        addItem(name: $name, section: $section){
+            name
+            id
+        }
+    }
+`;
+
+export {
+    registerMutation, loginMutation, getUserProfileMutation,
+    updateUserProfileMutation, addItemMutation, logoutMutation
+};

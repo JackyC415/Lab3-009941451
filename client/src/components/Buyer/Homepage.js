@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ItemList from '../Owner/ItemList';
 
 class BuyerHome extends Component {
     constructor(props) {
@@ -7,7 +8,8 @@ class BuyerHome extends Component {
     render() {
         return (
             <div>
-                <h1>Buyer Homepage</h1>
+                <h1>Buyer's ItemList</h1>
+                <ItemList />
             </div>
         )
     }

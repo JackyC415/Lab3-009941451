@@ -30,7 +30,6 @@ class Register extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-
         if (!this.state.owner) {
             this.props.registerMutation({
                 variables: {
@@ -41,6 +40,7 @@ class Register extends Component {
                 }
             });
         } else {
+            console.log(this.state.restaurantName);
             this.props.registerMutation({
                 variables: {
                     firstName: this.state.firstName,
@@ -53,6 +53,7 @@ class Register extends Component {
                 }
             });
         }
+        this.props.history.push(`/login`);
     }
 
     switchForm = (e) => {

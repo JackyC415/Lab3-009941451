@@ -1,5 +1,6 @@
 const graphql = require('graphql');
-const User = require('../models/User')
+const User = require('../models/User');
+const Item = require('../models/Item');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -9,7 +10,6 @@ const {
     GraphQLSchema,
     GraphQLID,
     GraphQLBoolean,
-    GraphQLInt,
     GraphQLList,
     GraphQLNonNull
 } = graphql;
@@ -28,19 +28,49 @@ const UserType = new GraphQLObjectType({
     })
 });
 
+const ItemType = new GraphQLObjectType({
+    name: 'Item',
+    fields: () => ({
+        id: { type: GraphQLID },
+        name: { type: GraphQLString },
+        section: { type: GraphQLString },
+        restaurantName: { type: GraphQLString },
+        owner_id: { type: GraphQLString }
+    })
+});
+
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-        getUserProfile: {
+        user: {
             type: UserType,
             args: { id: { type: GraphQLID } },
-            resolve: async function (parent, args, { req, res}) {
+            resolve: async function (parent, args, { req, res }) {
                 const user = await User.findOne({ _id: req.session.ID })
                 if (user) {
-                    console.log(user);
+                    console.log('QUERY USER: ' + user);
                     return user;
-                } else {
-                    console.log('no user found...');
+                }
+            }
+        },
+        item: {
+            type: ItemType,
+            args: { id: { type: GraphQLID } },
+            resolve: async function (parent, args) {
+                const item = await Item.findOne({ _id: args.id })
+                if (item) {
+                    console.log(item);
+                    return item;
+                }
+            }
+        },
+        items: {
+            type: new GraphQLList(ItemType),
+            resolve: async function (parent, args) {
+                const items = await Item.find({})
+                if (items) {
+                    console.log(items);
+                    return items;
                 }
             }
         }
@@ -67,7 +97,7 @@ const Mutation = new GraphQLObjectType({
                     lastName: args.lastName,
                     email: args.email,
                     password: args.password,
-                    restaurantname: args.restaurantName,
+                    restaurantName: args.restaurantName,
                     cuisine: args.cuisine,
                     owner: args.owner
                 });
@@ -95,6 +125,7 @@ const Mutation = new GraphQLObjectType({
                         const cookieValue = user.owner ? 'owner' : 'buyer';
                         res.cookie('cookie', cookieValue, { maxAge: 900000, httpOnly: false, path: '/' });
                         req.session.ID = user.id;
+                        req.session.restaurantName = user.restaurantName;
                         req.session.isLoggedIn = true;
                         console.log('graphql: login success');
                     }
@@ -111,12 +142,25 @@ const Mutation = new GraphQLObjectType({
             resolve: function (parent, args, { req }) {
                 req.session.isLoggedIn = false;
                 req.session.ID = null;
+                req.session.restaurantName = null;
                 console.log("graphql: logout success");
                 return;
             }
         },
-
-        updateProfile: {
+        getUserProfile: {
+            type: UserType,
+            args: {
+                email: { type: GraphQLString }
+            },
+            resolve: async function (parent, args, { req }) {
+                const user = await User.findOne({ _id: req.session.ID })
+                if (user) {
+                    console.log('graphql: fetch user profile success');
+                    return user;
+                }
+            }
+        },
+        updateUserProfile: {
             type: UserType,
             args: {
                 firstName: { type: GraphQLString },
@@ -128,10 +172,28 @@ const Mutation = new GraphQLObjectType({
             resolve: function (parent, args, { req }) {
                 Users.findByIdAndUpdate(req.session.ID, args, (err, user) => {
                     if (err) throw err;
-                    res.send("update profile success");
+                    console.log("graphql: update user profile success");
+                    return user;
                 });
-                console.log("graphql: update profile success");
-                return;
+            }
+        },
+        addItem: {
+            type: ItemType,
+            args: {
+                name: { type: GraphQLString },
+                section: { type: GraphQLString }
+            },
+            resolve: function (parent, args, { req }) {
+                const newItem = new Item({
+                    name: args.name,
+                    section: args.section,
+                    restaurantName: req.session.restaurantName,
+                    owner_id: req.session.ID
+                });
+                newItem.save()
+                    .then(() => console.log('graphql: add item success'))
+                    .catch(err => console.log(err))
+                return newItem;
             }
         }
     }

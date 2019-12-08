@@ -1,16 +1,15 @@
 import { gql } from 'apollo-boost';
 
-const getProfileQuery = gql`
+const getItemsQuery = gql`
     {
-        getUserProfile {
-            email
-            firstName
-            lastName
+        items {
+            name
+            section
             restaurantName
-            cuisine
+            owner_id
             id
         }
     }
 `;
 
-export { getProfileQuery };
+export { getItemsQuery };
