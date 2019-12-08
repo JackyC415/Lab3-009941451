@@ -3,7 +3,7 @@
 Instruction to clone, install dependencies and launch app locally:
 
 # One liner: 
-git clone https://github.com/JackyC415/Lab3-009941451.git && cd Lab3-009941451 cd client && npm i && cd ../server && npm i && npm run dev
+git clone https://github.com/JackyC415/Lab3-009941451.git && cd Lab3-009941451 && cd client && npm i && cd ../server && npm i && npm run dev
 
 # Step by Step (MacOS):
 1) git clone https://github.com/JackyC415/Lab3-009941451.git (clone repository)
